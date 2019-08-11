@@ -3,31 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props) {
-    // Inherit all props' behavior from React.Component
-    // This is a must.
-    super(props);
-
-    // state is private in this component, similar to Vue 2's data()
-    this.state = {
-      value: null,
-    };
-  }
-
   render() {
     return (
       <button
         className="square" 
-        onClick={() => this.setState({value: 'X'})}>
-        {this.state.value}
+        onClick={() => this.props.onClick()}
+      >
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice(); // shallow copy squares;
+    squares[i] = 'X'; // change target value
+    this.setState({squares: squares});
+  }
+
   renderSquare(i) {
-    return <Square value={i}/>;
+    return <Square 
+      value={this.state.squares[i]}
+      onClick={() => this.handleClick(i)}/>;
   }
 
   render() {
